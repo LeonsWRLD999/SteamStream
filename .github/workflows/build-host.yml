@@ -1,0 +1,22 @@
+name: Build Windows exe
+on:
+  push:
+    paths: ["host/**"]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: host
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyinstaller
+      - run: python -m PyInstaller --onefile --name SteamStreamHost steamstream_host.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SteamStreamHost
+          path: host/dist/SteamStreamHost.exe
